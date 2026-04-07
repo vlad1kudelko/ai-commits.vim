@@ -1,39 +1,64 @@
-# ai-commits.vim
+# AI-Commits.vim
 
-This plugin enables AI to automatically generate commit messages and execute git commit for you.
+Плагин для Neovim, который анализирует ваши изменения в Git и автоматически генерирует осмысленные сообщения для коммитов с помощью LLM (через OpenRouter).
 
-![vim-ai demo](./demo.gif)
+## ✨ Особенности
+* **Автономность**: Плагин сам создает виртуальное окружение (`.venv`) и устанавливает зависимости через `uv`.
+* **Скорость**: Благодаря `uv` подготовка окружения занимает считанные секунды.
+* **Интеграция с Git**: Автоматически подтягивает `git diff --cached`.
+* **OpenRouter**: По умолчанию `openrouter/free`.
 
-## Features
+## 🛠 Требования
+1. **Neovim** (с поддержкой Python3).
+2. **Python 3.10+**.
+3. **uv** — установлен в системе.
 
-- Generate AI Commit Messages
+## 🚀 Установка
 
-## Installation
+### 1. Используя vim-plug
+Добавьте в ваш `init.vim` или `.vimrc`:
 
-### Prerequisites
-
-- [API key](https://platform.openai.com/account/api-keys)
-
-```sh
-export OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
+```vim
+Plug 'vlad1kudelko/ai-commits.vim'
 ```
 
-### Using [lazy.nvim](https://github.com/folke/lazy.nvim)
-
-```lua
-  {
-    "yuucu/ai-commits.vim",
-    cmd = { "AICommits" },
-    lazy = false,
-    dependencies = {
-      'vim-denops/denops.vim'
-    },
-  }
+Затем выполните:
+```vim
+:PlugInstall
+:UpdateRemotePlugins  " Обязательно для Python-плагинов!
 ```
 
-## Usage
-
+### 2. Настройка API-ключа
+Создайте файл в домашней директории:
+```bash
+echo "ваш_ключ_openrouter" > ~/.ai_token
+chmod 600 ~/.ai_token
 ```
-" Automatic commit by AI
+
+## ⌨️ Использование
+
+Просто введите команду:
+```vim
 :AICommits
 ```
+
+**Что произойдет:**
+1. Плагин проверит наличие изменений (`git diff --cached`).
+2. При первом запуске создаст `.venv` внутри своей папки (используя `uv`).
+3. Отправит запрос в LLM.
+4. Выведет окно подтверждения с предложенным текстом.
+5. При нажатии `Yes` выполнит `git commit -m "текст"`.
+
+## 📂 Структура проекта
+```text
+ai-commits.vim/
+├── rplugin/
+│   └── python3/
+│       └── ai_commits.py
+└── README.md
+```
+
+## 🔧 Кастомизация
+Вы можете изменить модель или промпт прямо в файле `ai_commits.py`:
+* **Base URL**: По умолчанию `https://openrouter.ai/api/v1`.
+* **Model**: По умолчанию `openrouter/free`.

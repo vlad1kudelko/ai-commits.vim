@@ -8,8 +8,8 @@ const llm = new OpenAIChat({});
 const promptTemplate = new PromptTemplate({
   inputVariables: ["input", "locale"],
   template: `
-以下の指定された仕様を元に、diffの内容を簡潔なgit commitメッセージを生成してください。
-不必要な翻訳や余計な情報は除外して、gitコミットに直接使える形で提供してください。
+Generate a concise git commit message with the contents of the diff based on the specification specified below.
+Exclude unnecessary translations and extra information, and provide it in a way that can be used directly for git commits.
 
 ### Message Language
 {locale}
@@ -20,7 +20,7 @@ const promptTemplate = new PromptTemplate({
 });
 
 async function sendChatMessage(text: string) {
-  const prompt = await promptTemplate.format({ input: text, locale: "ja" });
+  const prompt = await promptTemplate.format({ input: text, locale: "en" });
   const commitMessage = await llm.call(prompt);
   return commitMessage;
 }

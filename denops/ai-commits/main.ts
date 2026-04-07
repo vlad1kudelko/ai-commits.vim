@@ -17,15 +17,15 @@ async function getApiKey(): Promise<string> {
 async function getLlm() {
     const apiKey = await getApiKey();
     return new ChatOpenAI({
-        openAIApiKey: apiKey,
+        apiKey: apiKey,
         configuration: {
             baseURL: "https://openrouter.ai/api/v1",
             defaultHeaders: {
                 "HTTP-Referer": "https://github.com/denops/denops.vim", // Опционально для OpenRouter
-                "X-Title": "Denops AI Commits", 
+                "X-Title": "Denops AI Commits",
             },
         },
-        modelName: "openai/gpt-4o-mini", 
+        modelName: "openrouter/free",
     });
 }
 
@@ -34,7 +34,7 @@ const promptTemplate = new PromptTemplate({
     template: [
         "Generate a concise git commit message with the contents of the diff based on the specification specified below.",
         "Exclude unnecessary translations and extra information, and provide it in a way that can be used directly for git commits.",
-        "The answer is in English.",
+        "The answer is in Russian, in the past tense, up to 120 characters.",
         "",
         "### diff",
         "{input}",
@@ -83,7 +83,7 @@ export async function main(denops: Denops): Promise<void> {
                 );
 
                 if (String(shouldCommit).toLowerCase() === "y") {
-                    // Если мы уже делали diff --cached, git add . может быть лишним, 
+                    // Если мы уже делали diff --cached, git add . может быть лишним,
                     // но оставим для совместимости с вашим флоу
                     await runGitCommand(["add", "."]);
                     await runGitCommand(["commit", "-m", commitMessage]);

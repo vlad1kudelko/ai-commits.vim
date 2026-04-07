@@ -45,7 +45,7 @@ class AICommitsPlugin:
             llm = ChatOpenAI(
                 api_key=api_key,
                 base_url="https://openrouter.ai/api/v1",
-                model="openrouter/free",
+                model="openai/gpt-oss-120b:free",
             )
 
             prompt_arr = [
